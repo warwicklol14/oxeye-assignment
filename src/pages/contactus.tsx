@@ -10,7 +10,7 @@ import {
   Button
 } from "@chakra-ui/core";
 import Layout from "../components/layout";
-import fire from "../fire";
+import {firebaseConfig} from "../fire";
 
 interface FormData {
     name:string;
@@ -25,6 +25,11 @@ const ContactUs = () => {
     
     async function onSubmit(values:FormData) {
         setIsSubmitting(true);
+        let fire;
+        if (typeof window !== 'undefined') {
+            fire = require('firebase');
+        }
+        fire.initializeApp(firebaseConfig);
         await fire.database().ref(`messages/${ uuid.v4() }`).set(values);
         toast({
             title: "Your message has been submitted",
